@@ -1,0 +1,26 @@
+{% extends 'basic.html' %}
+{% block body %}
+
+<p>Matches to vote</p>
+<form method="POST" action=".">
+    {% csrf_token %}
+    {% for match in matches_to_bet %}
+        {% for field in form %}
+            {% if match.home_team.name ==  field.label %}
+                <p>{{ field.errors }}<img src={{ match.home_team.flag }}>
+                {{ field.label }} {{ field }}
+            {% endif %}
+        {% endfor %}
+        :
+        {% for field in form %}
+            {% if match.away_team.name ==  field.label %}
+                {{ field }} {{ field.label }} <img src={{ match.away_team.flag }}> {{ field.errors }}
+            {% endif %}
+        {% endfor %}
+    <br>
+    {% endfor %}
+
+<input type=submit>
+</form>
+
+{% endblock %}

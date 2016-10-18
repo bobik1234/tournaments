@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html>
+
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'bet/style.css' %}" />
+
+<head>
+<title>Typowanie meczy</title>
+</head>
+
+<body>
+<section>
+<nav>
+<ul>
+    <li><a href="/bet/summary_table">Summary Table</a></li>
+    <li><a href="/bet/my_results">My Results</a></li>
+    <li><a href="/bet/vote/">My Votes</a></li>
+    <li><a href="/bet/own_calculation">Own Calculation</a></li>
+    <li><a href="/accounts/logout">Logout {{request.user.username}}</a></li>
+</ul>
+</nav>
+</section>
+
+{% block body %}{% endblock %}
+
+</body>
+</html>

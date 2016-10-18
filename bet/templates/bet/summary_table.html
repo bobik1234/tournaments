@@ -1,0 +1,48 @@
+{% extends 'basic.html' %}
+{% block body %}
+
+<br>
+<p>Summary table </p>
+
+{% for round, results in summary.items %}
+
+<p> Results in Round {{ round }} </p>
+<table>
+    <tr>
+        <th>User</th>
+        <th>Points</th>
+    </tr>
+    {% for user, points in results %}
+    <tr>
+        <td> {{ user }} </td>
+        <td> {{ points }} </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endfor %}
+
+<br>
+<p>Summary results</p>
+
+
+<table>
+    <tr>
+        <th>User</th>
+        <th>Match</th>
+        <th>Date</th>
+        <th>Expected_result</th>
+        <th>Final_result</th>
+        <th>Score</th>
+    </tr>
+    {% for item in overview_results %}
+    <tr>
+        <td>{{ item.user }}</td>
+        <td><img src={{ item.match.home_team.flag }}> {{ item.match.home_team.name }} - {{ item.match.away_team.name }}<img src={{ item.match.away_team.flag }}></td>
+        <td>{{ item.match.match_date|date:"D d M Y" }}</td>
+        <td align="center" valign="middle">{{ item.expected_result }}</td>
+        <td align="center" valign="middle">{{ item.final_result }}</td>
+        <td align="center" valign="middle">{{ item.score }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

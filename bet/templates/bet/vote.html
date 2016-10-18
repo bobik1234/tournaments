@@ -1,0 +1,30 @@
+{% extends 'basic.html' %}
+{% block body %}
+
+<p>My bets: </p>
+
+{% if user_bets  %}
+    {% for bet in user_bets %}
+        <p><img src={{ bet.match.home_team.flag }}>
+        {{ bet.match.home_team.name }}
+        {{ bet.expected_home_goals }} : {{ bet.expected_away_goals }}
+        {{ bet.match.away_team.name }}
+        <img src={{ bet.match.away_team.flag }}></p>
+    {% endfor %}
+{% else %}
+    Nothig
+{% endif %}
+
+<p>Matches to vote: </p>
+
+{% if matches_to_bet  %}
+    {% for match in matches_to_bet %}
+        <p><img src={{ match.home_team.flag }}>
+        {{ match.home_team.name }} - {{ match.away_team.name }}
+        <img src={{ match.away_team.flag }}></p>
+    {% endfor %}
+    <a href="/bet/new_votes">You can vote here</a>
+{% else %}
+    Nothig
+{% endif %}
+{% endblock %}
