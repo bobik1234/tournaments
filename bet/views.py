@@ -7,6 +7,7 @@ from django.template import RequestContext
 from bet.forms import Vote
 from bet.summary import get_finished_votes
 from bet.utility import calculate_current_bets
+from django.utils import timezone
 
 def index(request):
     return HttpResponse("Hello, world. Mamy strone z zakladami")
@@ -20,6 +21,16 @@ def summary_table(request):
     context = {'overview_results' : overview_results,
                'summary' : summary}
     return render(request, 'bet/summary_table.html', context)
+
+@login_required(login_url='/accounts/login/')
+def summary_bets(request):
+
+    overview_results = get_finished_votes()
+    summary = calculate_current_bets(overview_results)
+
+    context = {'overview_results' : overview_results,
+               'summary' : summary}
+    return render(request, 'bet/summary_bets.html', context)
 
 @login_required(login_url='/accounts/login/')
 def own_calculation(request):
@@ -45,14 +56,20 @@ def vote(request):
 
     matches_to_bet = []
     id_matches_to_bet = []
+    too_late_to_bet = []
     matches_already_bet = [m.match for m in user_bets]
+    now = timezone.now()
     for match in list(Match.objects.all()):
         if match not in matches_already_bet:
-            matches_to_bet.append(match)
-            id_matches_to_bet.append(match.id)
+            if now > match.match_date:
+                too_late_to_bet.append(match)
+            else:
+                matches_to_bet.append(match)
+                id_matches_to_bet.append(match.id)
 
     context = {'user_bets' : user_bets,
-               'matches_to_bet' : matches_to_bet}
+               'matches_to_bet' : matches_to_bet,
+               'too_late_to_bet' : too_late_to_bet}
 
     request.session['id_matches_to_bet'] = id_matches_to_bet
 

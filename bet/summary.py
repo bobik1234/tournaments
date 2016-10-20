@@ -26,6 +26,7 @@ def _match_bet_calculation(bet, match):
     """
     return {'user' : bet.user,
             'match' : match,
+            'round' : match.round,
             'expected_result' : _result_to_string(bet.expected_home_goals, bet.expected_away_goals),
             'final_result' : _result_to_string(match.home_goals, match.away_goals),
             'score' :  _calculate_score(bet, match)}
