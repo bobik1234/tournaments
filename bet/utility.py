@@ -38,5 +38,4 @@ def calculate_current_bets(overview_results):
     for round, results in rounds_results.items():
        sorted_rounds_results[round] = sorted(results.items(), key=operator.itemgetter(1), reverse=True)
 
-    print (sorted_rounds_results)
     return sorted_rounds_results

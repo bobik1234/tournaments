@@ -50,6 +50,7 @@ def my_results(request):
 
 @login_required(login_url='/accounts/login/')
 def vote(request):
+
     user_bets = []
     for bet in list(Bet.objects.filter(user=request.user)):
         user_bets.append(bet)
@@ -58,6 +59,8 @@ def vote(request):
     id_matches_to_bet = []
     too_late_to_bet = []
     matches_already_bet = [m.match for m in user_bets]
+    ongoing_bets = [bet for bet in user_bets if bet.match.home_goals == None]
+    finished_bets = [bet for bet in user_bets if bet.match.home_goals is not None]
     now = timezone.now()
     for match in list(Match.objects.all()):
         if match not in matches_already_bet:
@@ -67,9 +70,10 @@ def vote(request):
                 matches_to_bet.append(match)
                 id_matches_to_bet.append(match.id)
 
-    context = {'user_bets' : user_bets,
+    context = {'ongoing_bets' : ongoing_bets,
                'matches_to_bet' : matches_to_bet,
-               'too_late_to_bet' : too_late_to_bet}
+               'too_late_to_bet' : too_late_to_bet,
+               'finished_bets' : finished_bets}
 
     request.session['id_matches_to_bet'] = id_matches_to_bet
 
@@ -85,18 +89,12 @@ def new_votes(request):
 
     form = Vote(request.POST or None, matches_to_bet=matches_to_bet)
     if form.is_valid():
-        own_results = {}
-        for (team_name, score) in form.predicted_result():
-            own_results[team_name] = score
-            print (team_name)
-            print (score)
-
         for match in matches_to_bet:
-            print(match.home_team.name)
+            print(form.cleaned_data["{}_{}".format(match.home_team.name,match.id)])
             m = Bet(user=request.user,
                     match = match,
-                    expected_home_goals = own_results[match.home_team.name],
-                    expected_away_goals = own_results[match.away_team.name])
+                    expected_home_goals = form.cleaned_data["{}_{}".format(match.home_team.name, match.id)],
+                    expected_away_goals = form.cleaned_data["{}_{}".format(match.away_team.name, match.id)])
             m.save()
 
         return render(request, 'bet/vote.html')

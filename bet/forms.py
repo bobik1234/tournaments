@@ -7,8 +7,8 @@ class Vote(forms.Form):
         super(Vote, self).__init__(*args, **kwargs)
 
         for i, match in enumerate(matches_to_bet):
-            self.fields[match.home_team.name] = forms.DecimalField(max_digits=2)
-            self.fields[match.away_team.name] = forms.DecimalField(max_digits=2)
+            self.fields["{}_{}".format(match.home_team.name, match.id)] = forms.DecimalField(max_digits=2)
+            self.fields["{}_{}".format(match.away_team.name, match.id)] = forms.DecimalField(max_digits=2)
 
     def predicted_result(self):
         for name, value in self.cleaned_data.items():

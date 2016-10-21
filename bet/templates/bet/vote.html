@@ -2,11 +2,10 @@
 {% block body %}
 
 
-<h3>My bets: </h3>
-
-{% if user_bets  %}
+<h3>Ongoing bets: </h3>
+{% if ongoing_bets  %}
     <ol>
-    {% for bet in user_bets %}
+    {% for bet in ongoing_bets %}
         <li><img src={{ bet.match.home_team.flag }}>
         {{ bet.match.home_team.name }}
         {{ bet.expected_home_goals }} : {{ bet.expected_away_goals }}
@@ -33,6 +32,22 @@
     Nothig
 {% endif %}
 
+<h3>Finished bets:</h3>
+
+{% if finished_bets  %}
+    <ol>
+    {% for bet in finished_bets %}
+        <li><img src={{ bet.match.home_team.flag }}>
+        {{ bet.match.home_team.name }}
+        {{ bet.expected_home_goals }} : {{ bet.expected_away_goals }}
+        {{ bet.match.away_team.name }}
+        <img src={{ bet.match.away_team.flag }}>
+            Final result: {{ bet.match.home_goals }} : {{ bet.match.away_goals }} </li>
+    {% endfor %}
+    </ol>
+{% else %}
+    Nothig
+{% endif %}
 
 <h3>Too late to bet:</h3>
 
